@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>tiny-skill</module>
+        <module>boot-mdc</module>
     </modules>
 
     <name>boot-parent</name>
