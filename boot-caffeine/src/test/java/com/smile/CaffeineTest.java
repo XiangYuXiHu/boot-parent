@@ -138,7 +138,8 @@ public class CaffeineTest {
 
     /**
      * 二级缓存进行结合
-     * 同步监听器:实现 CacheWriter 接口的两个方法，当新增，更新某个数据时，会同步触发 write 方法的执行。当删除某个数据时，会触发 delete 方法的执行。
+     * 同步监听器:实现 CacheWriter 接口的两个方法，当新增，更新某个数据时，会同步触发 write 方法的执行。
+     * 当删除某个数据时，会触发 delete 方法的执行。
      *
      * @throws InterruptedException
      */
