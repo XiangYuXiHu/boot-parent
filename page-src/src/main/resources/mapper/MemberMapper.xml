@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smile.mapper.MemberMapper">
+
+    <resultMap id="baseResult" type="com.smile.entity.Member">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="interests" column="interests"/>
+    </resultMap>
+
+    <select id="findPage" resultMap="baseResult" parameterType="page">
+        select * from t_member
+    </select>
+
+</mapper>

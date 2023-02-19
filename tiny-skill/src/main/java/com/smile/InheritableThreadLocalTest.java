@@ -1,8 +1,8 @@
 package com.smile;
 
 import com.alibaba.ttl.threadpool.TtlExecutors;
-import com.smile.domain.User;
-import com.smile.domain.UserContext;
+import com.smile.entity.User;
+import com.smile.entity.UserContext;
 
 import java.util.concurrent.ExecutorService;
 

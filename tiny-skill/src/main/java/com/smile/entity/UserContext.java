@@ -1,4 +1,4 @@
-package com.smile.domain;
+package com.smile.entity;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
 
