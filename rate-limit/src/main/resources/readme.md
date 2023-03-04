@@ -1,0 +1,9 @@
+项目添加依赖
+
+手动装配限流
+启动类或者配置类标准@EnableRedisRateLimit
+
+需要限流的uri接口标注@RateLimit
+replenishRate单位时间填充速率，burstCapacity令牌桶容量，timeUnit时间单位
+默认使用uri作为依据进行限流，如果需要变更，可以通过实现KeyResolver编写自己的限流依据即可。
+默认使用注解中的参数作为限流参数，如果需要使用配置类的形式对限流参数进行指定，可以通过实现LimitProperties接口
