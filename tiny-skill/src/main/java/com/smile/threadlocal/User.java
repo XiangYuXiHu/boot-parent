@@ -1,4 +1,4 @@
-package com.smile.entity;
+package com.smile.threadlocal;
 
 /**
  * @Description

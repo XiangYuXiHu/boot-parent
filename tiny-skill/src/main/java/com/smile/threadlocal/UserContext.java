@@ -1,6 +1,7 @@
-package com.smile.entity;
+package com.smile.threadlocal;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
+import com.smile.threadlocal.User;
 
 /**
  * @Description
