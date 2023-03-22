@@ -1,0 +1,7 @@
+import com.smile.rule.engine.domain.*;
+
+class %s implements RuleEngineGroovyModule {
+    boolean run(RuleEngineExecuteContext context){
+        %s
+    }
+}
