@@ -12,7 +12,7 @@ import java.util.Map;
  * @Author smile
  * @date 2023.03.20 19:52
  */
-public class RuleEngineExecuteContext implements Serializable {
+public class RuleEngineContext implements Serializable {
 
     private String bizId;
 
