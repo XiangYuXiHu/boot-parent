@@ -13,6 +13,11 @@
         <module>tiny-skill</module>
         <module>boot-mdc</module>
         <module>page-src</module>
+        <module>rule-engine</module>
+        <module>sign</module>
+        <module>repeat</module>
+        <module>rate-limit</module>
+        <module>canal-mq</module>
     </modules>
 
     <name>boot-parent</name>
