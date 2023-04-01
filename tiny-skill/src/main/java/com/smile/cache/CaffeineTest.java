@@ -1,4 +1,4 @@
-package com.smile;
+package com.smile.cache;
 
 import com.github.benmanes.caffeine.cache.*;
 import lombok.extern.slf4j.Slf4j;
@@ -14,44 +14,38 @@ import java.util.function.Function;
 
 /**
  * @Description
- * @ClassName Ca
+ * @ClassName CaffeineTest
  * @Author smile
- * @date 2023.02.12 12:14
+ * @date 2023.04.01 17:27
  */
 @Slf4j
 public class CaffeineTest {
-
     private Cache<String, Integer> cache;
 
     @Before
     public void initCache() {
         cache = Caffeine.newBuilder()
                 .expireAfterWrite(5, TimeUnit.SECONDS)
-                .maximumSize(1000)
-                .build();
+                .maximumSize(10000).build();
     }
 
-    /**
-     * 手动加载
-     */
     @Test
-    public void manualTest() throws InterruptedException {
+    public void manualCacheTest() throws InterruptedException {
         String key = "china";
-        /**
-         * 如果缓存中不存指定的值，则方法将返回 null
-         */
         log.info("{}", cache.getIfPresent(key));
-        log.info("{}", cache.get(key, new Function<String, Integer>() {
-            @Override
-            public Integer apply(String s) {
-                return 1;
-            }
-        }));
+        Integer value = cache.get(key, s -> {
+            return 1;
+        });
+        log.info("{}", value);
         cache.put(key, 100);
         log.info("{}", cache.getIfPresent(key));
-//        cache.invalidate(key);
-//        TimeUnit.SECONDS.sleep(10);
+        TimeUnit.SECONDS.sleep(6);
+        log.info("expire is {}", cache.getIfPresent(key));
+
+        cache.put(key, 101);
         log.info("{}", cache.getIfPresent(key));
+        cache.invalidate(key);
+        log.info("invalidate is {}", cache.getIfPresent(key));
     }
 
     private Integer getFromDB(String key) {
@@ -63,9 +57,9 @@ public class CaffeineTest {
      * 如果返回值则将其插入缓存中，并且返回，这是一种同步的操作，也支持批量查找。
      */
     @Test
-    public void syncTest() {
+    public void syncCache() {
         LoadingCache<String, Integer> cache = Caffeine.newBuilder()
-                .expireAfterWrite(60, TimeUnit.SECONDS)
+                .expireAfterWrite(10, TimeUnit.SECONDS)
                 .maximumSize(1000)
                 .build(new CacheLoader<String, Integer>() {
                     @Nullable
@@ -74,34 +68,26 @@ public class CaffeineTest {
                         return getFromDB(key);
                     }
                 });
-        log.info("{}", cache.get("china"));
+        log.info("sync cache is {} ", cache.get("china"));
     }
 
-    /**
-     * 异步加载
-     *
-     * @throws ExecutionException
-     * @throws InterruptedException
-     */
     @Test
-    public void asyncTest() throws ExecutionException, InterruptedException {
+    public void asyncCacheTest() throws ExecutionException, InterruptedException {
         AsyncCache<String, Integer> asyncCache = Caffeine.newBuilder()
                 .expireAfterWrite(60, TimeUnit.SECONDS)
                 .maximumSize(1000)
-                .executor(Executors.newSingleThreadExecutor())
+                .executor(new ThreadPoolExecutor(1,
+                        1, 30, TimeUnit.SECONDS,
+                        new ArrayBlockingQueue<>(100)))
                 .buildAsync();
-
-        String key = "china";
-        CompletableFuture<Integer> future = asyncCache.get(key, new Function<String, Integer>() {
+        CompletableFuture<Integer> future = asyncCache.get("china", new Function<String, Integer>() {
             @Override
             public Integer apply(String s) {
-                log.info("当前线程:{}", Thread.currentThread().getName());
-                return getFromDB(key);
+                log.info("{}", Thread.currentThread().getName());
+                return getFromDB(s);
             }
         });
-
-        Integer value = future.get();
-        log.info("{} --{}", value, Thread.currentThread().getName());
+        log.info("async cache is {}", future.get());
     }
 
     /**
@@ -113,28 +99,26 @@ public class CaffeineTest {
      */
     @Test
     public void freshAfterWriteTest() throws InterruptedException {
-        LoadingCache<String, Integer> cache = Caffeine.newBuilder()
-                .refreshAfterWrite(2, TimeUnit.SECONDS)
-                .expireAfterWrite(3, TimeUnit.SECONDS)
+        String key = "china";
+        LoadingCache<String, Integer> build = Caffeine.newBuilder().refreshAfterWrite(2, TimeUnit.SECONDS)
                 .build(new CacheLoader<String, Integer>() {
-
                     @Nullable
                     @Override
-                    public Integer load(@NonNull String key) throws Exception {
-                        return getFromDB(key);
+                    public Integer load(@NonNull String s) throws Exception {
+                        return getFromDB(s);
                     }
                 });
-        cache.put("china", 1);
+        cache.put(key, 1);
         TimeUnit.MILLISECONDS.sleep(2500);
-        log.info("{}", cache.getIfPresent("china"));
+        log.info("{}", cache.getIfPresent(key));
         TimeUnit.MILLISECONDS.sleep(1500);
-        log.info("{}", cache.getIfPresent("china"));
-        TimeUnit.MILLISECONDS.sleep(1500);
-        log.info("{}", cache.getIfPresent("china"));
+        log.info("{}", cache.getIfPresent(key));
+        TimeUnit.MILLISECONDS.sleep(1000);
+        log.info("{}", cache.getIfPresent(key));
     }
 
-    private Map<Integer, WeakReference<Integer>> secondCacheMap =
-            new ConcurrentHashMap<>();
+
+    private Map<Integer, WeakReference<Integer>> secondCacheMap = new ConcurrentHashMap<>();
 
     /**
      * 二级缓存进行结合
@@ -144,9 +128,8 @@ public class CaffeineTest {
      * @throws InterruptedException
      */
     @Test
-    public void CaffeineWriteTest() throws InterruptedException {
-        LoadingCache<Integer, Integer> cache = Caffeine.newBuilder()
-                .maximumSize(1)
+    public void caffeineWriteTest() throws InterruptedException {
+        LoadingCache<Integer, Integer> cache = Caffeine.newBuilder().maximumSize(1)
                 .writer(new CacheWriter<Integer, Integer>() {
                     @Override
                     public void write(@NonNull Integer key, @NonNull Integer value) {
@@ -172,18 +155,26 @@ public class CaffeineTest {
                     @Nullable
                     @Override
                     public Integer load(@NonNull Integer key) throws Exception {
-                        WeakReference<Integer> value = secondCacheMap.get(key);
-                        if (null == value) {
+                        WeakReference<Integer> weakReference = secondCacheMap.get(key);
+                        if (null == weakReference) {
                             return null;
                         }
                         log.info("从二级缓存读取key{}", key);
-                        return value.get();
+                        return weakReference.get();
                     }
                 });
         cache.put(1, 1);
         cache.put(2, 2);
-        Thread.sleep(1000);
-        log.info("{}-{}-{}-{}", cache.get(1), cache.stats().hitRate(), cache.stats().evictionCount(), cache.stats().averageLoadPenalty());
+        cache.put(3, 3);
+
+        /**
+         * 删除缓存需要时间
+         */
+        TimeUnit.SECONDS.sleep(3);
+        log.info("{}-{}-{}-{}", cache.get(1),
+                cache.stats().hitRate(),
+                cache.stats().evictionCount(),
+                cache.stats().averageLoadPenalty());
     }
 
     /**

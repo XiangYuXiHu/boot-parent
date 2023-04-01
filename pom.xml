@@ -9,7 +9,6 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>boot-caffeine</module>
         <module>tiny-skill</module>
         <module>boot-mdc</module>
         <module>page-src</module>
@@ -19,6 +18,7 @@
         <module>rate-limit</module>
         <module>canal-mq</module>
         <module>source-code</module>
+        <module>groovy-engine</module>
     </modules>
 
     <name>boot-parent</name>
@@ -38,12 +38,6 @@
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
                 <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>transmittable-thread-local</artifactId>
-                <version>2.14.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
