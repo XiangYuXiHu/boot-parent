@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -73,5 +74,52 @@ public class RefreshScriptHelper {
         }
     }
 
+    /**
+     * <p>
+     * 刷新所有script
+     *  <ol>
+     *     <li>扫描指定位置的所有脚本，如果脚本信息有变化，则更新本地脚本缓存scriptRegistry</li>
+     *     <li>如果脚本没有变化，则不更新缓存，什么也不做</li>
+     *  </ol>
+     * </p>
+     */
+    public boolean refreshAll() {
+        List<ScriptEntry> scriptEntries = null;
+        boolean success = false;
+        int addScriptCount = 0;
+        int updateScriptCount = 0;
+        try {
+            logger.info("RefreshScriptHelper start refresh all groovy script.");
+            scriptEntries = scriptLoader.load();
 
+            for (ScriptEntry scriptEntry : scriptEntries) {
+                ScriptEntry oldScriptEntry = scriptRegistry.findOnCache(new ScriptQuery(scriptEntry.getName()));
+
+                if (Objects.isNull(oldScriptEntry)) {
+                    logger.info("can not found script by [{}], register to registry directly.", scriptEntry.getName());
+                    Class<?> aClass = dynamicCodeCompiler.compile(scriptEntry);
+                    scriptEntry.setClazz(aClass);
+                    scriptRegistry.register(scriptEntry);
+                    addScriptCount++;
+                    continue;
+                }
+
+                if (!oldScriptEntry.getFingerprint().equalsIgnoreCase(scriptEntry.getFingerprint())) {
+                    logger.info("found script by [{}], but their fingerprints are different, modify it.", scriptEntry.getName());
+                    Class<?> aClass = dynamicCodeCompiler.compile(scriptEntry);
+                    scriptEntry.setClazz(aClass);
+                    scriptEntry.setLastModifiedTime(System.currentTimeMillis());
+                    scriptRegistry.register(scriptEntry);
+                    updateScriptCount++;
+                }
+            }
+        } catch (Exception e) {
+            hotLoadingGroovyScriptAlarm.alarm(scriptEntries, e);
+            success = false;
+        }
+        logger.info("RefreshScriptHelper refresh groovy script end,scriptCount is [{}], addScriptCount is [{}]," +
+                " updateScriptCount is [{}]", Objects.isNull(scriptEntries) ?
+                null : scriptEntries.size(), addScriptCount, updateScriptCount);
+        return success;
+    }
 }

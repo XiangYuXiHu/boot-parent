@@ -6,9 +6,11 @@ import com.smile.groovy.engine.core.alarm.HotLoadingGroovyScriptAlarm;
 import com.smile.groovy.engine.core.compiler.DynamicCodeCompiler;
 import com.smile.groovy.engine.core.compiler.GroovyCompiler;
 import com.smile.groovy.engine.core.domain.ScriptEntry;
+import com.smile.groovy.engine.core.executor.AutoRefreshScriptExecutor;
 import com.smile.groovy.engine.core.executor.DefaultEngineExecutor;
 import com.smile.groovy.engine.core.executor.EngineExecutor;
 import com.smile.groovy.engine.core.helper.ApplicationContextHelper;
+import com.smile.groovy.engine.core.helper.RefreshScriptHelper;
 import com.smile.groovy.engine.core.loader.ScriptLoader;
 import com.smile.groovy.engine.core.registry.DefaultScriptRegistry;
 import com.smile.groovy.engine.core.registry.ScriptRegistry;
@@ -33,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Configuration
 @EnableConfigurationProperties(value = {GroovyEngineProperties.class})
-@ConditionalOnProperty(prefix = GroovyEngineProperties.PREFIX + ".enable", havingValue = "true")
+@ConditionalOnProperty(prefix = GroovyEngineProperties.PREFIX, value = "enable", havingValue = "true")
 public class GroovyEngineCoreAutoConfiguration {
 
     private Logger log = LoggerFactory.getLogger(GroovyEngineCoreAutoConfiguration.class);
@@ -77,8 +79,20 @@ public class GroovyEngineCoreAutoConfiguration {
         return new DefaultEngineExecutor(scriptRegistry);
     }
 
-    //todo AutoRefreshScriptExecutor
+    /**
+     * 注入刷新groovy脚本助手
+     */
+    @Bean
+    @ConditionalOnMissingBean(RefreshScriptHelper.class)
+    public RefreshScriptHelper refreshScriptHelper() {
+        return new RefreshScriptHelper();
+    }
 
+    @Bean
+    public AutoRefreshScriptExecutor autoRefreshScriptExecutor(GroovyEngineProperties groovyEngineProperties,
+                                                               RefreshScriptHelper refreshScriptHelper) {
+        return new AutoRefreshScriptExecutor(groovyEngineProperties, refreshScriptHelper);
+    }
 
     @Bean
     @ConditionalOnMissingBean(HotLoadingGroovyScriptAlarm.class)

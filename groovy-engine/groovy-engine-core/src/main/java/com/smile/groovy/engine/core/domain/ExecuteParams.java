@@ -8,7 +8,7 @@ import java.util.HashMap;
  * @Author smile
  * @date 2023.04.02 21:13
  */
-public class ExecutorParams extends HashMap<String, Object> {
+public class ExecuteParams extends HashMap<String, Object> {
 
     /**
      * 通过key获取value，并转换为对应的类型

@@ -96,4 +96,46 @@ public class EngineExecutorResult {
     public static EngineExecutorResult success(ExecutionStatus status, Object context) {
         return new EngineExecutorResult(status, context);
     }
+
+    public ExecutionStatus getExecutionStatus() {
+        return executionStatus;
+    }
+
+    public void setExecutionStatus(ExecutionStatus executionStatus) {
+        this.executionStatus = executionStatus;
+    }
+
+    public Object getContext() {
+        return context;
+    }
+
+    public void setContext(Object context) {
+        this.context = context;
+    }
+
+    public Throwable getException() {
+        return exception;
+    }
+
+    public void setException(Throwable exception) {
+        this.exception = exception;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    @Override
+    public String toString() {
+        return "EngineExecutorResult{" +
+                "executionStatus=" + executionStatus +
+                ", context=" + context +
+                ", exception=" + exception +
+                ", errorMessage='" + errorMessage + '\'' +
+                '}';
+    }
 }

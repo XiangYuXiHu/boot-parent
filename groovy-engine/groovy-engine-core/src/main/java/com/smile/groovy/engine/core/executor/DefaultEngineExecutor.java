@@ -3,7 +3,7 @@ package com.smile.groovy.engine.core.executor;
 import com.google.common.base.Preconditions;
 import com.smile.groovy.engine.core.constants.GroovyEngineConstants;
 import com.smile.groovy.engine.core.domain.EngineExecutorResult;
-import com.smile.groovy.engine.core.domain.ExecutorParams;
+import com.smile.groovy.engine.core.domain.ExecuteParams;
 import com.smile.groovy.engine.core.domain.ScriptEntry;
 import com.smile.groovy.engine.core.domain.ScriptQuery;
 import com.smile.groovy.engine.core.helper.ApplicationContextHelper;
@@ -34,19 +34,19 @@ public class DefaultEngineExecutor implements EngineExecutor {
     }
 
     @Override
-    public @NonNull EngineExecutorResult execute(@NonNull ScriptQuery scriptQuery, ExecutorParams executorParams) {
+    public @NonNull EngineExecutorResult execute(@NonNull ScriptQuery scriptQuery, ExecuteParams executeParams) {
         ScriptEntry scriptEntry = null;
         try {
             scriptEntry = scriptRegistry.find(scriptQuery);
         } catch (Exception e) {
             EngineExecutorResult.failed(e.getMessage());
         }
-        return execute(scriptEntry, executorParams);
+        return execute(scriptEntry, executeParams);
     }
 
     @Override
-    public @NonNull EngineExecutorResult execute(@NonNull ScriptEntry scriptEntry, ExecutorParams executorParams) {
-        Binding binding = buildBinding(executorParams);
+    public @NonNull EngineExecutorResult execute(@NonNull ScriptEntry scriptEntry, ExecuteParams executeParams) {
+        Binding binding = buildBinding(executeParams);
         Preconditions.checkNotNull(scriptEntry.getClazz(), "execute script failed, clazz can not be null");
         Script script = InvokerHelper.createScript(scriptEntry.getClazz(), binding);
         script.setBinding(binding);
@@ -55,22 +55,22 @@ public class DefaultEngineExecutor implements EngineExecutor {
     }
 
     @Override
-    public @NonNull EngineExecutorResult execute(@NonNull String groovyMethodName, @NonNull ScriptQuery scriptQuery, ExecutorParams executorParams) {
+    public @NonNull EngineExecutorResult execute(@NonNull String groovyMethodName, @NonNull ScriptQuery scriptQuery, ExecuteParams executeParams) {
         ScriptEntry scriptEntry = null;
         try {
             scriptEntry = scriptRegistry.find(scriptQuery);
         } catch (Exception e) {
             EngineExecutorResult.failed(e.getMessage());
         }
-        return execute(groovyMethodName, scriptEntry, executorParams);
+        return execute(groovyMethodName, scriptEntry, executeParams);
     }
 
     @Override
-    public @NonNull EngineExecutorResult execute(@NonNull String groovyMethodName, @NonNull ScriptEntry scriptEntry, ExecutorParams executorParams) {
-        Binding binding = buildBinding(executorParams);
+    public @NonNull EngineExecutorResult execute(@NonNull String groovyMethodName, @NonNull ScriptEntry scriptEntry, ExecuteParams executeParams) {
+        Binding binding = buildBinding(executeParams);
         Preconditions.checkNotNull(scriptEntry.getClazz(), "execute script failed, clazz can not be null");
         Script script = InvokerHelper.createScript(scriptEntry.getClazz(), binding);
-        Object result = script.invokeMethod(groovyMethodName, executorParams);
+        Object result = script.invokeMethod(groovyMethodName, executeParams);
         return EngineExecutorResult.success(result);
     }
 
@@ -80,7 +80,7 @@ public class DefaultEngineExecutor implements EngineExecutor {
      * @param params
      * @return
      */
-    private Binding buildBinding(ExecutorParams params) {
+    private Binding buildBinding(ExecuteParams params) {
         Binding binding = new Binding();
         /**
          * 将spring容器上下文放入脚本
