@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/v1/loadFromPath")
-public class LoadFromClasspathController extends BaseController {
+public class OrderController extends BaseController {
 
     @Autowired
     private EngineExecutor engineExecutor;

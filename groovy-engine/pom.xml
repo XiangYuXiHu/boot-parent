@@ -21,6 +21,7 @@
     <modules>
         <module>groovy-classpath-loader</module>
         <module>groovy-engine-core</module>
+        <module>groovy-redis-loader</module>
         <module>groovy-engine-demo</module>
     </modules>
 </project>
