@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smile.mapper.RedPacketMapper">
+
+    <!--查询红包具体信息-->
+    <select id="getRedPacket" parameterType="long" resultType="com.smile.domain.RedPacket">
+        select id,
+               amount,
+               total,
+               stock,
+               create_time as createTime,
+               version
+        FROM t_red_packet
+        where id = #{id}
+    </select>
+    <!-- 扣减抢红包库存 -->
+    <update id="decreaseRedPacket">
+        update t_red_packet
+        set stock=stock - 1
+        where id = #{id}
+          and stock > 0
+    </update>
+
+    <update id="decreaseRedPacketByVersion">
+        update t_red_packet
+        set stock=stock - 1,
+            version=version + 1
+        where id = #{id}
+          and version = #{version}
+    </update>
+</mapper>
