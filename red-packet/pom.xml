@@ -10,7 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>redpacket</module>
-        <!--        <module>redpacket-lua</module>-->
+        <module>redpacket-lua</module>
     </modules>
 
     <name>red-packet</name>

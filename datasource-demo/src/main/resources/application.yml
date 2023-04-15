@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: data-source
+  datasource:
+    dynamic:
+      primary: master
+      datasource:
+        master:
+          driver-class-name: com.mysql.jdbc.Driver
+          url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/product_master?useUnicode=true&characterEncoding=UTF-8&useSSL=false}
+          username: ${SPRING_DATASOURCE_USERNAME:admin}
+          password: ${SPRING_DATASOURCE_PASSWORD:admin}
+
+        slave:
+          driver-class-name: com.mysql.jdbc.Driver
+          url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/product_slave?useUnicode=true&characterEncoding=UTF-8&useSSL=false}
+          username: ${SPRING_DATASOURCE_USERNAME:admin}
+          password: ${SPRING_DATASOURCE_PASSWORD:admin}
+      hikari:
+        min-idle: ${SPRING_DATASOURCE_MINIMUM_IDLE:10}
+        max-pool-size: ${SPRING_DATASOURCE_MAXIMUM_POOL_SIZE:90}
+        connection-timeout: ${SPRING_DATASOURCE_CONNECTION_TIMEOUT:30000}
+
+mybatis:
+  mapperLocations: classpath*:/mapper/*.xml
+  configuration:
+    mapUnderscoreToCamelCase: true
+
+# 调整日志级别
+logging:
+  level:
+    org.enhance.datasource.demo.mapper: debug
