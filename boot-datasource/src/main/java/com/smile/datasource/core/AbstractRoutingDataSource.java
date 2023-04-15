@@ -1,6 +1,5 @@
 package com.smile.datasource.core;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 import org.springframework.lang.NonNull;
 
