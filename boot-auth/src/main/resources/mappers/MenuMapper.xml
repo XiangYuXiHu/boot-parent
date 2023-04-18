@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smile.mapper.MenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.smile.auth.entity.Menu">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="menu_code" property="menuCode"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="node_type" property="nodeType"/>
+        <result column="icon_url" property="iconUrl"/>
+        <result column="sort" property="sort"/>
+        <result column="link_url" property="linkUrl"/>
+        <result column="level" property="level"/>
+        <result column="path" property="path"/>
+        <result column="is_delete" property="isDelete"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, menu_code, parent_id, node_type, icon_url, sort, link_url, level, path, is_delete
+    </sql>
+
+</mapper>

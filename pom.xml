@@ -21,6 +21,7 @@
         <module>groovy-engine</module>
         <module>boot-datasource</module>
         <module>red-packet</module>
+        <module>boot-auth</module>
     </modules>
 
     <name>boot-parent</name>
