@@ -22,6 +22,7 @@
         <module>boot-datasource</module>
         <module>red-packet</module>
         <module>boot-auth</module>
+        <module>seata</module>
     </modules>
 
     <name>boot-parent</name>
