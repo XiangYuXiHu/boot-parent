@@ -1,6 +1,6 @@
 package com.smile.order.client;
 
-import com.smile.common.base.ResultBean;
+import com.simle.common.base.ResultBean;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

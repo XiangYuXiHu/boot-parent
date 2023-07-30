@@ -1,6 +1,6 @@
 package com.smile.order.service;
 
-import com.smile.common.domain.Order;
+import com.simle.common.domain.Order;
 
 /**
  * 订单服务

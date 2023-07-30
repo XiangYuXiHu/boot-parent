@@ -1,7 +1,7 @@
 package com.smile.order.controller;
 
-import com.smile.common.base.ResultBean;
-import com.smile.common.domain.Order;
+import com.simle.common.base.ResultBean;
+import com.simle.common.domain.Order;
 import com.smile.order.service.OrderService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

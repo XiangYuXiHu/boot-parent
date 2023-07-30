@@ -1,6 +1,6 @@
 package com.smile.storage.controller;
 
-import com.smile.common.base.ResultBean;
+import com.simle.common.base.ResultBean;
 import com.smile.storage.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

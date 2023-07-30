@@ -1,6 +1,6 @@
 package com.smile.order.mapper;
 
-import com.smile.common.domain.Order;
+import com.simle.common.domain.Order;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
