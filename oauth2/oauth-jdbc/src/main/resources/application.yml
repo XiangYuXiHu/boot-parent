@@ -1,0 +1,27 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+spring:
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .ftl
+    mode: HTML5
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+    check-template: true
+  application:
+    name: spring-oauth2-jdbc
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/oauth?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: admin
+    password: admin
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
