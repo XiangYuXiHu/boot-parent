@@ -1,10 +1,10 @@
-package com.smile.auth;
+package com.smile.oauth.smiple;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BootAuthApplicationTests {
+class OauthSimpleApplicationTests {
 
     @Test
     void contextLoads() {

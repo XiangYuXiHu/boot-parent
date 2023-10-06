@@ -1,6 +1,6 @@
 package com.smile.auth.exception;
 
-import com.smile.dto.BizResponse;
+import com.smile.auth.dto.BizResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

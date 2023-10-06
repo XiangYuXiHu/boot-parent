@@ -65,7 +65,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public boolean  isMenuExist(AddMenuRequest request) {
+    public boolean isMenuExist(AddMenuRequest request) {
         QueryWrapper<Menu> queryWrapper = new QueryWrapper<>();
         String menuName = request.getName();
         String menuCode = request.getMenuCode();
@@ -100,6 +100,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return false;
     }
 
+    /**
+     * 用户查询角色-角色查询菜单（含父菜单）
+     *
+     * @param userId
+     * @return
+     */
     private List<Menu> getAllMenuList(Long userId) {
         QueryWrapper<UserRole> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
