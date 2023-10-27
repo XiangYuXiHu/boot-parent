@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js "></script>
+
+    <style>
+
+        .login-box {
+            margin-top:20%;
+            margin-left:30%;
+        }
+    </style>
+</head>
+<body>
+<div class="login-box" id="app" >
+    <el-row>
+        <el-col :span="8">
+            <el-input id="name"  v-model="name" placeholder="请输入帐号">
+                <template slot="prepend">帐号</template>
+            </el-input>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col :span="8">
+            <el-input id="password" v-model="password" type="password" placeholder="请输入密码">
+                <template slot="prepend">密码</template>
+            </el-input>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col :span="8">
+            <el-button id="login" v-on:click="check" style="width:100%" type="primary">登录</el-button>
+        </el-col>
+    </el-row>
+</div>
+</body>
+
+<script type="text/javascript">
+    function setCookie(name,value)
+    {
+        var Days = 30;
+        var exp = new Date();
+        exp.setTime(exp.getTime() + Days*24*60*60*1000);
+        document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+    }
+
+
+    new Vue({
+        el : '#app',
+        data : {
+            name : 'user',
+            password : '123456'
+        },
+        methods : {
+            check : function(event){
+                //获取值
+                var name = this.name;
+                var password = this.password;
+                if(name == '' || password == ''){
+                    this.$message({
+                        message : '账号或密码为空！',
+                        type : 'error'
+                    })
+                    return;
+                }
+                $.ajax({
+                    url : '/auth/oauth/token',
+                    type : 'post',
+                    headers: {
+                        Authorization: "Basic bWU6MTIzNDU2"
+                    },
+                    data : {
+                        username : name,
+                        password : password,
+                        grant_type: "password",
+                        scope: "local"
+                    },
+                    success : function(data) {
+                        if(data.access_token){
+                            //alert("登录成功:"+data.access_token);
+                            setCookie('access_token', data.access_token);
+                            window.location.href = "/index.html";
+                        }else {
+                            alert("登录失败");
+                        }
+                    },
+                    error : function(data) {
+                        alert(data);
+                    },
+                    dataType : 'json',
+                })
+            }
+        }
+    });
+
+
+
+</script>
+</html>

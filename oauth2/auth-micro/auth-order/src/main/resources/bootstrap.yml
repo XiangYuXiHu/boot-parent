@@ -1,0 +1,16 @@
+server:
+  port: 53021
+
+spring:
+  application:
+    name: auth-order
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+# 开启feign对sentinel的支持
+feign:
+  sentinel:
+    enabled: true
+
+

@@ -1,0 +1,36 @@
+server:
+  port: 53010
+
+spring:
+  application:
+    name: oauth-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 # ��gatewayע�ᵽnacos
+    gateway:
+      discovery:
+        locator:
+          enabled: true # ��gateway��nacos�л�ȡ������Ϣ
+      routes:
+        - id: auth-server
+          uri: lb://auth-server
+          order: 1
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        - id: auth-order
+          uri: lb://auth-order
+          order: 1
+          predicates:
+            - Path=/order/**
+          filters:
+            - StripPrefix=1
+
+
+
+
+
+
+

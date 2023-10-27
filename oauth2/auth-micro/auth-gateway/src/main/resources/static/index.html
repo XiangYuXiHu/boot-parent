@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js "></script>
+
+    <script type="text/javascript">
+        //读取cookies
+        function getCookie(name)
+        {
+            var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+
+            if(arr=document.cookie.match(reg))
+
+                return unescape(arr[2]);
+            else
+                return null;
+        }
+
+        $(document).ready(function(){
+            var token = getCookie('access_token') ;
+            var Authorization = "Bearer "+token;
+
+            $("#o1").click(function(){
+                $.ajax({
+                    url : '/order/o1',
+                    type : 'get',
+                    headers: {
+                        Authorization: Authorization
+                    },
+                    data : {},
+                    success : function(data) {
+                        alert(
+                            data.userName +"\n" +
+                            data.order +"\n" +
+                            data.IP +"\n"
+                        );
+                    },
+                    error : function(data) {
+                        alert(data);
+                    },
+                    dataType : 'json',
+                });
+            });
+
+            $("#o2").click(function(){
+                $.ajax({
+                    url : '/order/o2',
+                    type : 'get',
+                    headers: {
+                        Authorization: Authorization
+                    },
+                    data : {},
+                    success : function(data) {
+                        alert(
+                            data.userName +"\n" +
+                            data.order +"\n" +
+                            data.IP +"\n"
+                        );
+                    },
+                    error : function(data) {
+                        alert(JSON.stringify(data));
+                    },
+                    dataType : 'json',
+                });
+            });
+
+        });
+    </script>
+</head>
+<body>
+
+<h1> <p style="cursor:pointer;" id="o1">订单1</p> </h1>
+<h1> <p style="cursor:pointer;" id="o2">订单2</p> </h1>
+
+
+</body>
+</html>
